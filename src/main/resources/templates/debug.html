@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<h1>login</h1>
+
+id:
+<input id="userId">
+password:
+<input id="password">
+
+<button id="loginButton">
+	ログイン
+</button>
+
+<script>
+	const loginButton = document.getElementById("loginButton")
+	loginButton.addEventListener("click", async ()=>{
+		const userId = parseInt(document.getElementById("userId").value)
+		const password = document.getElementById("password").value
+		await fetch("/api/login", {
+			method: "POST",
+			credentials: "include",
+			headers:{"Content-Type":"application/json"},
+			body: JSON.stringify({userId,password}),
+		})
+		.then(r=>r.json())
+		.then(console.log)
+	})
+</script>
+
+<hr>
+
+<h1>show user</h1>
+
+<div id="userData"></div>
+
+<button id="reloadButton">reload</button>
+
+<script>
+	const reloadButton = document.getElementById("reloadButton")
+	reloadButton.addEventListener("click", async ()=>{
+		const user = await fetch("/api/user/session")
+			.then(r=>r.text())
+		const userDataDiv = document.getElementById("userData")
+		console.log(user);
+		userDataDiv.innerHTML = JSON.stringify(user)
+	})
+</script>
+
+<h1>logout</h1>
+
+<button id="logoutBtn">logout</button>
+
+<script>
+	const logoutBtn = document.getElementById("logoutBtn")
+	logoutBtn.addEventListener("click", async()=>{
+		await fetch("/api/logout",{
+			method:"POST",
+			credentials: "include",
+		})
+		.then(r=>r.json())
+		.then(console.log)
+	})
+</script>
+
+</body>
+</html>
